@@ -1,6 +1,7 @@
 import webpack from "webpack";
 import fs from "fs";
 import merge from "webpack-merge";
+import { VueLoaderPlugin } from "vue-loader";
 
 const defaultConfig = {
   mode: "development",
@@ -24,19 +25,24 @@ const defaultConfig = {
             ]
           }
         }
+      },
+      {
+        test: /\.vue$/,
+        use: {
+          loader: "vue-loader"
+        }
       }
     ]
   },
-  plugins: [],
+  plugins: [new VueLoaderPlugin()],
   optimization: {
     minimize: false
   }
 };
 
 export const getCompiler = (ttagPluging, webpackConf = {}) => {
-  const config = merge.smart({}, defaultConfig, webpackConf, {
-    plugins: [ttagPluging]
-  });
+  const config = merge.smart({}, defaultConfig, webpackConf);
+  config.plugins.unshift(ttagPluging);
   return webpack(config);
 };
 
