@@ -1,7 +1,6 @@
 import webpack from "webpack";
-import deepcopy from "deepcopy";
 import fs from "fs";
-import { NONAME } from "dns";
+import merge from "webpack-merge";
 
 const defaultConfig = {
   mode: "development",
@@ -35,8 +34,9 @@ const defaultConfig = {
 };
 
 export const getCompiler = (ttagPluging, webpackConf = {}) => {
-  const config = deepcopy(Object.assign({}, defaultConfig, webpackConf));
-  config.plugins.unshift(ttagPluging);
+  const config = merge.smart({}, defaultConfig, webpackConf, {
+    plugins: [ttagPluging]
+  });
   return webpack(config);
 };
 
